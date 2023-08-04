@@ -18,6 +18,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework.authtoken',
     'rest_framework',
+    # установили CORS, чтоб фронт мог отправлять запросы с порта, отличного от порта бэкенда
+    # и прописали его:
+    'corsheaders',
     'djoser',
     'cats.apps.CatsConfig',
 ]
@@ -25,11 +28,22 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    # зарегистрировали обработчик CorsMiddleware (из приложения CORS):
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+# разрешим обрабатывать запросы с любого хоста:
+# CORS_ORIGIN_ALLOW_ALL = True  # удалили эту настройку, так как ограничили список хостов константой CORS_ALLOWED_ORIGINS
+# пропишем адреса, к которым можно обращаться с др хостов:
+CORS_URLS_REGEX = r'^/api/.*$'   # любая строка, начинающаяся с /api/
+# пропишем домен, с которого можно отправлять к нам запросы. Если его не прописать, то все смогут слать нам запросы
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
 ]
 
 ROOT_URLCONF = 'kittygram_backend.urls'
